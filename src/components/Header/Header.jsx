@@ -9,7 +9,7 @@ const Header = () => {
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-lg col-10 col-lg-10 p-0">
           <a className="navbar-brand col-4 fw-bold text-dark" href="/">
-            Evoque Innovative Lab
+            Evoque Inovative Lab
           </a>
           <button
             className="navbar-toggler"
@@ -30,28 +30,28 @@ const Header = () => {
           >
             <ul className="nav_List navbar-nav mb-2 mb-lg-0 col-lg-7 col-xl-6 d-flex justify-content-between">
               <li className="nav-item">
-                <a className="nav-link p-0 my-2 my-lg-0" aria-current="page" href="/about">
+                <a className="nav-link p-0 my-2 my-lg-0" aria-current="page" href="/">
                   About
                 </a>
-                <img src={img} alt="it's just a Dot" />
+                <img src={img} alt="decorative dot" />
               </li>
               <li className="nav-item marketplace">
-                <a className="nav-link p-0 my-2 my-lg-0" href="/marketplace" style={{ color: "#0461D1" }}>
+                <a className="nav-link p-0 my-2 my-lg-0" href="/" style={{ color: "#0461D1" }}>
                   Marketplace
                 </a>
-                <img src={img} alt="it's just a Dot" style={{ color: "#0461D1" }} />
+                <img src={img} alt="decorative dot" style={{ color: "#0461D1" }} />
               </li>
               <li className="nav-item">
-                <a className="nav-link p-0 my-2 my-lg-0" href="/resources">
+                <a className="nav-link p-0 my-2 my-lg-0" href="/">
                   Resources
                 </a>
-                <img src={img} alt="it's just a Dot" />
+                <img src={img} alt="decorative dot" />
               </li>
               <li className="nav-item">
-                <a className="nav-link p-0 my-2 my-lg-0" href="/contact">
+                <a className="nav-link p-0 my-2 my-lg-0" href="/">
                   Contact
                 </a>
-                <img src={img} alt="it's just a Dot" />
+                <img src={img} alt="decorative dot" />
               </li>
             </ul>
             <div

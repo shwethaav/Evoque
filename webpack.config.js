@@ -1,13 +1,6 @@
-
 const TerserPlugin = require('@rollup/plugin-terser');
 const path = require('path');
-module.exports = {
-  // Other Webpack configurations...
-  optimization: {
-    minimize: true,
-    minimizer: [new TerserPlugin()]
-  }
-};
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -35,6 +28,10 @@ module.exports = {
         use: ['file-loader']
       }
     ]
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()]
   },
   devServer: {
     contentBase: path.resolve(__dirname, 'dist')

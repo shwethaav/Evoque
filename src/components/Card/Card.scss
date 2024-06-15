@@ -1,0 +1,21 @@
+@media ( max-width: 380px){
+    .buttonsInCard{
+        display: flex;
+        flex-direction: column;
+
+        a:first-child{
+            margin-bottom: 12px;
+        }
+    }
+}
+
+@media ( min-width: 992px ) and ( max-width:1300px ){
+    .buttonsInCard{
+        display: flex;
+        flex-direction: column;
+
+        a:first-child{
+            margin-bottom: 12px;
+        }
+    }
+}

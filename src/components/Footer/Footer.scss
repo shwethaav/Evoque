@@ -1,0 +1,39 @@
+
+  .footer {
+    background-image: url("../../../src/assets/footer.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 408px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    h5{
+      color: white;
+      text-align: center;
+      padding-top: 2vw;
+      font-size: 16px;
+      font-weight: 400;
+    }
+}
+h1 {
+    color: white;
+    text-align: center;
+    font-size:36px ;
+    font-weight: 400;
+}
+
+.button{
+  padding-top: 3vw;
+}
+a#download {
+    text-align: center;
+    padding: 13px;
+    color: #0461D1;
+    border: 0.5px solid #fff;
+    border-radius: 4px;
+   font-weight: 600;
+   font-size: 14px;
+   background-color: white;
+}

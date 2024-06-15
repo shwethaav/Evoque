@@ -1,0 +1,57 @@
+
+  #header {
+    background-image: url("../../assets/bgr.png");
+    background-repeat: no-repeat;
+    width: 85%;
+    background-size: cover;
+    .headerContent{
+      width: 100%;
+      padding: 117px 0px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-image: url("../../assets/Maskgroup.svg");
+    }
+h1 {
+    color: white;
+    font-family: Arial;
+    text-align: center;
+}
+h5{
+    color: white;
+    font-family: Arial;
+    text-align: center; 
+    margin-top: 2vw;
+    margin-bottom: 2vw;
+    line-height: 2.5vw;
+    font-size: 34px;
+    font-weight: 500;
+}
+.download {
+    text-align: center;
+    color: white;
+    text-align: center;
+    font-size:16px;
+    font-weight: 400;
+    margin-top: 1.8vw;
+}
+}
+.nav_List {
+  li {
+    position: relative;
+
+    a {
+      color: #444444;
+    }
+
+    img {
+      display: none;
+      position: absolute;
+      left: 50%;
+    }
+  }
+
+  li:hover img,
+  li.marketplace img {
+    display: block;
+  }
+}

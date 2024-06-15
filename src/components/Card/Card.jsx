@@ -85,14 +85,14 @@ const Card = ({ item }) => {
             </p>
             <div className="buttonsInCard d-flex justify-content-between">
               <a
-                href="#"
+                href="javascript:void(0)"
                 className="btn btn-primary"
                 onClick={() => handleNavigate(item?.redirection_url)}
               >
                 View More Details
               </a>
               <a
-                href="#"
+                href="javascript:void(0)"
                 className="btn border border-primary btn-color"
                 style={{ color: "#0461D1" }}
               >

@@ -13,7 +13,7 @@ const Footer = () => {
           customized trading strategies.
         </h5>
         <div className="button">
-          <a id="download" href="#" aria-label="Open New Account">Open New Account</a>
+          <a id="download" href="javascript:void(0)" aria-label="Open New Account">Open New Account</a>
         </div>
       </div>
     </div>

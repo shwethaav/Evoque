@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Main.scss";
 import Card from "../../components/Card/Card";
 import { IoIosSearch } from "react-icons/io";
@@ -9,7 +9,6 @@ import Loader from "../../components/Loader/Loader";
 const Main = () => {
   const token =
     "eyJhbGciOiJIUzUxMiIsImlhdCI6MTYwODEwMDI4MCwiZXhwIjoxNjE1ODc2MjgwfQ.eyJ0eXBlIjozLCJpZCI6MTQ5MzMsImNyZWF0ZWQiOiIyMDIwLTEyLTE2IDA2OjMxOjIwLjczMTk2NiJ9.Ef001xBUX_ZPsgvGWCou9sUa6Q2BV9jvPWZZsnwE8qB3_IDTGaSNV0d0lmcuWab2FwEUQ3GouA9LVdd7ExmkvQ";
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [sortOption, setSortOption] = useState("1");
@@ -21,7 +20,6 @@ const Main = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
-  const [myState, setMyState] = useState(1);
 
   const handleSelectPage = () => {
     setPage(page + 1);
@@ -33,9 +31,6 @@ const Main = () => {
   const moveLeft = () => {
     setPage(page - 1);
   };
-  const [borderOnHover, setBorderOnHover] = useState(
-    "border border-primary rounded-circle"
-  );
 
   useEffect(() => {
     fetch(
@@ -43,7 +38,6 @@ const Main = () => {
     )
       .then((response) => response.json())
       .then((data) => {
-        setData(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -58,63 +52,55 @@ const Main = () => {
     setFilter(updatedFilter);
   };
 
-  const fetchFilteredData = async (filters) => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        "https://18ebbuf8l8.execute-api.ap-south-1.amazonaws.com/demo/api/v3/user/marketplace/filter-data",
-        {
-          method: "Get",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Token": token,
-          },
-          body: JSON.stringify({
-            page_num: page,
-            filter_id: 2,
-            segment_id: 1,
-            price_type: filter?.developer === "All" ? null : filter?.developer,
-            rating_by: filter?.rating === "All" ? null : filter?.rating,
-            application_type:
-              filter?.appType === "All" ? null : filter?.appType,
-            min_price_limit: 0,
-            max_price_limit: 29500000,
-            min_investment_limit: 0,
-            max_investment_limit: 100000000,
-            sort_by: parseInt(sortOption),
-          }),
-        }
-      );
-      const filteredData = list?.products.filter((item) => {
-        if (filters.rating === "All") {
-          return true;
-        } else {
-          return item.rating >= filters.rating;
-        }
-      });
-      setList(filteredData);
-    } catch (error) {
-      console.error("Error fetching filtered data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchFilteredData(filter);
-  }, [filter, page]);
-
+  //   useEffect(() => {
+  //     const fetchFilteredData = async (filters) => {
+  //       setLoading(true);
+  //       try {
+  //         const response = await fetch(
+  //           "https://18ebbuf8l8.execute-api.ap-south-1.amazonaws.com/demo/api/v3/user/marketplace/filter-data",
+  //           {
+  //             method: "GET",
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //               "Access-Token": token,
+  //             },
+  //             body: JSON.stringify({
+  //               page_num: page,
+  //               filter_id: 2,
+  //               segment_id: 1,
+  //               price_type: filter?.developer === "All" ? null : filter?.developer,
+  //               rating_by: filter?.rating === "All" ? null : filter?.rating,
+  //               application_type: filter?.appType === "All" ? null : filter?.appType,
+  //               min_price_limit: 0,
+  //               max_price_limit: 29500000,
+  //               min_investment_limit: 0,
+  //               max_investment_limit: 100000000,
+  //               sort_by: parseInt(sortOption),
+  //             }),
+  //           }
+  //         );
+  //         if (!response.ok) {
+  //           throw new Error(`HTTP error! Status: ${response.status}`);
+  //         }
+  //         const data = await response.json();
+  //         const filteredData = data?.products.filter((item) => {
+  //           if (filters.rating === "All") {
+  //             return true;
+  //           } else {
+  //             return item.rating >= filters.rating;
+  //           }
+  //         });
+  //         setList(filteredData);
+  //       } catch (error) {
+  //         console.error("Error fetching filtered data:", error);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+  // }, [token, page, filter?.developer, filter?.rating, filter?.appType, sortOption]);
   //search API
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (searchText.trim()) {
-        onSubmit();
-      }
-    }, 1000);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchText, page]);
-
-  async function onSubmit() {
+  const onSubmit = useCallback(async () => {
     setIsSubmitting(true);
     try {
       const url =
@@ -143,13 +129,24 @@ const Main = () => {
     } catch (error) {
       console.error("Error fetching products:", error);
       setLoading(false);
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
-  }
+  }, [token, page, searchText]);
 
   //Product List With Filter
 
-  const handleSorting = async () => {
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchText.trim()) {
+        onSubmit();
+      }
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchText, page, onSubmit]);
+
+  const handleSorting = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(
@@ -188,11 +185,11 @@ const Main = () => {
       console.error("Error fetching products:", error);
       setLoading(false);
     }
-  };
+  }, [token, page, filter, sortOption]);
 
-  useEffect(() => {
+   useEffect(() => {
     handleSorting();
-  }, [sortOption, page, filter]);
+  }, [handleSorting]); 
 
   return (
     <div>
@@ -228,7 +225,7 @@ const Main = () => {
               <div className="main_container_left_develop_heading">
                 <h3>Price Type</h3>
                 <div className="main_container_left_develop_heading_buttons">
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
                       className="form-check-input"
                       type="radio"
@@ -236,31 +233,31 @@ const Main = () => {
                       checked={filter.developer === null}
                       onChange={() => handleFilterChange("developer", null)}
                     />
-                    <label class="form-check-label" for="flexRadioDefault1">
+                    <label className="form-check-label" for="flexRadioDefault1">
                       All
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="developer"
                       checked={filter.developer === 1}
                       onChange={() => handleFilterChange("developer", 1)}
                     />
-                    <label class="form-check-label" for="flexRadioDefault2">
+                    <label className="form-check-label" for="flexRadioDefault2">
                       Trail Access
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="developer"
                       checked={filter.developer === 2}
                       onChange={() => handleFilterChange("developer", 2)}
                     />
-                    <label class="form-check-label" for="flexRadioDefault2">
+                    <label className="form-check-label" for="flexRadioDefault2">
                       Free
                     </label>
                   </div>
@@ -271,99 +268,105 @@ const Main = () => {
               <div className="main_container_left_rating_heading">
                 <h3>Rating by</h3>
                 <div className="main_container_left_rating_heading_buttons d-flex align-item-center">
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="rating"
                       checked={filter.rating === 5}
                       onChange={() => handleFilterChange("rating", 5)}
                     />
                     <label
-                      class="form-check-label ml-3"
+                      className="form-check-label ml-3"
                       for="flexRadioDefault1"
                     >
                       All
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="rating"
                       checked={filter.rating === 4}
                       onChange={() => handleFilterChange("rating", 4)}
                     />
                     <label
-                      class="custom-control-label ml-3"
+                      className="custom-control-label ml-3"
                       htmlFor="four-and-above"
                     >
-                      <span class="rating-stars">
-                        <i class="bi bi-star-fill ml-3"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star"></i>
+                      <span className="rating-stars">
+                        <i className="bi bi-star-fill ml-3"></i>
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star"></i>
                       </span>
                       & above
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="rating"
                       checked={filter.rating === 3}
                       onChange={() => handleFilterChange("rating", 3)}
                     />
                     <label
-                      class="custom-control-label"
+                      className="custom-control-label"
                       htmlFor="three-and-above"
                     >
-                      <span class="rating-stars">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star"></i>
-                        <i class="bi bi-star"></i>
+                      <span className="rating-stars">
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star"></i>
+                        <i className="bi bi-star"></i>
                       </span>
                       & above
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="rating"
                       checked={filter.rating === 2}
                       onChange={() => handleFilterChange("rating", 2)}
                     />
-                    <label class="custom-control-label" htmlFor="two-and-above">
-                      <span class="rating-stars">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star"></i>
-                        <i class="bi bi-star"></i>
-                        <i class="bi bi-star"></i>
+                    <label
+                      className="custom-control-label"
+                      htmlFor="two-and-above"
+                    >
+                      <span className="rating-stars">
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star"></i>
+                        <i className="bi bi-star"></i>
+                        <i className="bi bi-star"></i>
                       </span>
                       & above
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="rating"
                       checked={filter.rating === 1}
                       onChange={() => handleFilterChange("rating", 1)}
                     />
-                    <label class="custom-control-label" htmlFor="one-and-above">
-                      <span class="rating-stars">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star"></i>
-                        <i class="bi bi-star"></i>
-                        <i class="bi bi-star"></i>
-                        <i class="bi bi-star"></i>
+                    <label
+                      className="custom-control-label"
+                      htmlFor="one-and-above"
+                    >
+                      <span className="rating-stars">
+                        <i className="bi bi-star-fill"></i>
+                        <i className="bi bi-star"></i>
+                        <i className="bi bi-star"></i>
+                        <i className="bi bi-star"></i>
+                        <i className="bi bi-star"></i>
                       </span>
                       & above
                     </label>
@@ -375,39 +378,39 @@ const Main = () => {
               <div className="main_container_left_rating_heading">
                 <h3>Application type</h3>
                 <div className="main_container_left_rating_heading_buttons">
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="appType"
                       checked={filter.appType === null}
                       onChange={() => handleFilterChange("appType", null)}
                     />
-                    <label class="form-check-label" for="flexRadioDefault1">
+                    <label className="form-check-label" for="flexRadioDefault1">
                       All
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="appType"
                       checked={filter.appType === 1}
                       onChange={() => handleFilterChange("appType", 1)}
                     />
-                    <label class="form-check-label" for="flexRadioDefault2">
+                    <label className="form-check-label" for="flexRadioDefault2">
                       Web based applications
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="appType"
                       checked={filter.appType === 2}
                       onChange={() => handleFilterChange("appType", 2)}
                     />
-                    <label class="form-check-label" for="flexRadioDefault2">
+                    <label className="form-check-label" for="flexRadioDefault2">
                       Mobile Applications
                     </label>
                   </div>

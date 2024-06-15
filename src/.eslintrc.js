@@ -10,7 +10,6 @@ module.exports = {
         ignoreWarningsInCi: true
       }
     },
-  
     overrides: [
       {
         files: ["*.js", "*.jsx"],
@@ -20,4 +19,3 @@ module.exports = {
       }
     ]
   };
-  

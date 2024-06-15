@@ -12,11 +12,7 @@ const Main = () => {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [sortOption, setSortOption] = useState("1");
-  const [filter, setFilter] = useState({
-    developer: "All",
-    rating: "All",
-    appType: "All",
-  });
+  const [filter, setFilter] = useState({developer: "All",rating: "All",appType: "All"});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
@@ -52,54 +48,7 @@ const Main = () => {
     setFilter(updatedFilter);
   };
 
-  //   useEffect(() => {
-  //     const fetchFilteredData = async (filters) => {
-  //       setLoading(true);
-  //       try {
-  //         const response = await fetch(
-  //           "https://18ebbuf8l8.execute-api.ap-south-1.amazonaws.com/demo/api/v3/user/marketplace/filter-data",
-  //           {
-  //             method: "GET",
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //               "Access-Token": token,
-  //             },
-  //             body: JSON.stringify({
-  //               page_num: page,
-  //               filter_id: 2,
-  //               segment_id: 1,
-  //               price_type: filter?.developer === "All" ? null : filter?.developer,
-  //               rating_by: filter?.rating === "All" ? null : filter?.rating,
-  //               application_type: filter?.appType === "All" ? null : filter?.appType,
-  //               min_price_limit: 0,
-  //               max_price_limit: 29500000,
-  //               min_investment_limit: 0,
-  //               max_investment_limit: 100000000,
-  //               sort_by: parseInt(sortOption),
-  //             }),
-  //           }
-  //         );
-  //         if (!response.ok) {
-  //           throw new Error(`HTTP error! Status: ${response.status}`);
-  //         }
-  //         const data = await response.json();
-  //         const filteredData = data?.products.filter((item) => {
-  //           if (filters.rating === "All") {
-  //             return true;
-  //           } else {
-  //             return item.rating >= filters.rating;
-  //           }
-  //         });
-  //         setList(filteredData);
-  //       } catch (error) {
-  //         console.error("Error fetching filtered data:", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-  // }, [token, page, filter?.developer, filter?.rating, filter?.appType, sortOption]);
-  //search API
-
+  
   const onSubmit = useCallback(async () => {
     setIsSubmitting(true);
     try {

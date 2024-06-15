@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.js', // Assuming your entry point is in src/index.js
+  entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'), // Output to /path/to/your/project/dist
+    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
   },
   module: {
@@ -12,7 +12,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
         }
       },
       {
@@ -26,8 +29,6 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist'), // Serve content from /path/to/your/project/dist
-    // other devServer configurations
+    contentBase: path.resolve(__dirname, 'dist')
   }
 };
-
